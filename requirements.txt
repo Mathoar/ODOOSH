@@ -1,9 +1,1 @@
-# Python dependencies for Odoo.sh
-# Add your extra Python packages here (one per line)
-# These will be installed automatically on Odoo.sh builds
-#
-# Examples:
-# openai
-# requests
-# python-barcode
-# phonenumbers
+openpyxl

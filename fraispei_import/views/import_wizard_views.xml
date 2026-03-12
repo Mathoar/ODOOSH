@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Wizard Form View -->
+    <record id="view_fraispei_import_wizard_form" model="ir.ui.view">
+        <field name="name">fraispei.import.wizard.form</field>
+        <field name="model">fraispei.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import FRAIS PEI">
+                <group invisible="state != 'draft'">
+                    <group>
+                        <field name="import_type" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="file_data" filename="file_name"/>
+                        <field name="file_name" invisible="1"/>
+                        <field name="dry_run"/>
+                        <field name="import_limit"/>
+                    </group>
+                </group>
+
+                <group invisible="state != 'done'">
+                    <field name="result_text" widget="text" nolabel="1"
+                           readonly="1" colspan="2"
+                           style="font-family: monospace; white-space: pre;"/>
+                </group>
+
+                <field name="state" invisible="1"/>
+
+                <footer>
+                    <button name="action_import" string="Lancer l'import"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reset" string="Nouvel import"
+                            type="object" class="btn-primary"
+                            invisible="state != 'done'"/>
+                    <button string="Fermer" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open wizard -->
+    <record id="action_fraispei_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Données FRAIS PEI</field>
+        <field name="res_model">fraispei.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_fraispei_root"
+              name="FRAIS PEI"
+              sequence="90"/>
+
+    <menuitem id="menu_fraispei_import"
+              name="Import Données"
+              parent="menu_fraispei_root"
+              action="action_fraispei_import_wizard"
+              sequence="10"/>
+
+</odoo>
