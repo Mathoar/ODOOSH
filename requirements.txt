@@ -1,1 +1,1 @@
-openpyxl
+# Dépendances Python supplémentaires pour Odoo.sh
