@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pennylane_import_wizard_form" model="ir.ui.view">
+        <field name="name">pennylane.import.wizard.form</field>
+        <field name="model">pennylane.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Pennylane">
+                <group>
+                    <group string="Période">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Options">
+                        <field name="import_type"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_import" type="object"
+                            string="Lancer l'import" class="btn-primary"/>
+                    <button name="action_test_connection" type="object"
+                            string="Tester la connexion" class="btn-secondary"/>
+                    <button string="Annuler" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="pennylane_import_wizard_action" model="ir.actions.act_window">
+        <field name="name">Importer des factures</field>
+        <field name="res_model">pennylane.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

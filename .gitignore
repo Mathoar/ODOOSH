@@ -1,23 +1,8 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Odoo
 *.pyc
-filestore/
-sessions/
-
-# Environment
-.env
-.env.*
+__pycache__/
+*.egg-info/
+.idea/
+.vscode/
+*.swp
+*.swo
+migration/output/

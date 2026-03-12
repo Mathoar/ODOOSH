@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu principal -->
+    <menuitem id="pennylane_menu_root"
+              name="Pennylane"
+              web_icon="pennylane_connector,static/description/icon.png"
+              sequence="90"/>
+
+    <!-- Sous-menus -->
+    <menuitem id="pennylane_menu_invoices"
+              name="Factures"
+              parent="pennylane_menu_root"
+              action="pennylane_invoice_action"
+              sequence="10"/>
+
+    <menuitem id="pennylane_menu_import"
+              name="Importer des factures"
+              parent="pennylane_menu_root"
+              action="pennylane_import_wizard_action"
+              sequence="20"/>
+
+    <menuitem id="pennylane_menu_history"
+              name="Historique des imports"
+              parent="pennylane_menu_root"
+              action="pennylane_import_batch_action"
+              sequence="30"/>
+
+</odoo>

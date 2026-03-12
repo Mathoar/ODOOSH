@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pennylane_import_batch_list" model="ir.ui.view">
+        <field name="name">pennylane.import.batch.list</field>
+        <field name="model">pennylane.import.batch</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="import_date"/>
+                <field name="user_id"/>
+                <field name="invoice_count"/>
+                <field name="new_count"/>
+                <field name="duplicate_count"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'running'"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'error'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="pennylane_import_batch_form" model="ir.ui.view">
+        <field name="name">pennylane.import.batch.form</field>
+        <field name="model">pennylane.import.batch</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="import_date"/>
+                            <field name="user_id"/>
+                            <field name="invoice_count"/>
+                            <field name="new_count"/>
+                            <field name="duplicate_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Factures importées">
+                            <field name="invoice_ids">
+                                <list>
+                                    <field name="invoice_number"/>
+                                    <field name="supplier_name"/>
+                                    <field name="issue_date"/>
+                                    <field name="amount_ht"/>
+                                    <field name="amount_ttc"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Journal d'erreurs" invisible="not error_log">
+                            <field name="error_log"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pennylane_import_batch_action" model="ir.actions.act_window">
+        <field name="name">Historique des imports</field>
+        <field name="res_model">pennylane.import.batch</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

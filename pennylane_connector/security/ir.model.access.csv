@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pennylane_invoice_user,pennylane.invoice.user,model_pennylane_invoice,account.group_account_user,1,1,1,0
+access_pennylane_invoice_manager,pennylane.invoice.manager,model_pennylane_invoice,account.group_account_manager,1,1,1,1
+access_pennylane_invoice_line_user,pennylane.invoice.line.user,model_pennylane_invoice_line,account.group_account_user,1,1,1,0
+access_pennylane_invoice_line_manager,pennylane.invoice.line.manager,model_pennylane_invoice_line,account.group_account_manager,1,1,1,1
+access_pennylane_import_batch_user,pennylane.import.batch.user,model_pennylane_import_batch,account.group_account_user,1,0,0,0
+access_pennylane_import_batch_manager,pennylane.import.batch.manager,model_pennylane_import_batch,account.group_account_manager,1,1,1,1
+access_pennylane_import_wizard,pennylane.import.wizard,model_pennylane_import_wizard,account.group_account_manager,1,1,1,1

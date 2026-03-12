@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════ LIST VIEW ════════ -->
+    <record id="pennylane_invoice_list" model="ir.ui.view">
+        <field name="name">pennylane.invoice.list</field>
+        <field name="model">pennylane.invoice</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'ignored'"
+                  decoration-success="state == 'validated'"
+                  decoration-info="state == 'sent'"
+                  multi_edit="1">
+                <field name="invoice_number"/>
+                <field name="supplier_name"/>
+                <field name="entity" widget="badge"
+                       decoration-info="entity == 'frais_pei'"
+                       decoration-warning="entity == 'lpe'"/>
+                <field name="supplier_type" widget="badge"/>
+                <field name="charge_category"/>
+                <field name="issue_date"/>
+                <field name="amount_ht" sum="Total HT"/>
+                <field name="amount_ttc" sum="Total TTC"/>
+                <field name="is_paid" widget="boolean"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'new'"
+                       decoration-warning="state == 'sent'"
+                       decoration-success="state == 'validated'"
+                       decoration-muted="state == 'ignored'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ════════ FORM VIEW ════════ -->
+    <record id="pennylane_invoice_form" model="ir.ui.view">
+        <field name="name">pennylane.invoice.form</field>
+        <field name="model">pennylane.invoice</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_mark_sent" type="object"
+                            string="Marquer envoyé"
+                            class="btn-primary"
+                            invisible="state != 'new'"/>
+                    <button name="action_mark_validated" type="object"
+                            string="Valider"
+                            class="btn-primary"
+                            invisible="state not in ('new', 'sent')"/>
+                    <button name="action_mark_ignored" type="object"
+                            string="Ignorer"
+                            invisible="state in ('validated', 'ignored')"/>
+                    <button name="action_reset_new" type="object"
+                            string="Remettre en nouveau"
+                            invisible="state == 'new'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,sent,validated"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="invoice_number" placeholder="N° Facture"/>
+                        </h1>
+                        <h3>
+                            <field name="label" placeholder="Libellé"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group string="Fournisseur">
+                            <field name="partner_id"/>
+                            <field name="supplier_name"/>
+                            <field name="entity"/>
+                            <field name="supplier_type"/>
+                            <field name="charge_category"/>
+                        </group>
+                        <group string="Montants">
+                            <field name="amount_ht"/>
+                            <field name="amount_ttc"/>
+                            <field name="currency"/>
+                            <field name="outstanding_balance"/>
+                            <field name="is_paid"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Dates">
+                            <field name="issue_date"/>
+                            <field name="deadline"/>
+                            <field name="created_date"/>
+                        </group>
+                        <group string="Traçabilité">
+                            <field name="pennylane_id"/>
+                            <field name="source"/>
+                            <field name="import_batch_id"/>
+                            <field name="odoo_invoice_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lignes de facture" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_name"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="amount_ht" sum="Total HT"/>
+                                    <field name="tax_rate"/>
+                                    <field name="account_code"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Données brutes" name="raw">
+                            <field name="raw_data" widget="text"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ════════ SEARCH VIEW ════════ -->
+    <record id="pennylane_invoice_search" model="ir.ui.view">
+        <field name="name">pennylane.invoice.search</field>
+        <field name="model">pennylane.invoice</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="invoice_number"/>
+                <field name="supplier_name"/>
+                <field name="partner_id"/>
+                <field name="label"/>
+                <!-- Filtres statut -->
+                <filter name="new" string="Nouveaux"
+                        domain="[('state', '=', 'new')]"/>
+                <filter name="sent" string="Envoyés"
+                        domain="[('state', '=', 'sent')]"/>
+                <filter name="validated" string="Validés"
+                        domain="[('state', '=', 'validated')]"/>
+                <filter name="ignored" string="Ignorés"
+                        domain="[('state', '=', 'ignored')]"/>
+                <separator/>
+                <!-- Filtres entité -->
+                <filter name="entity_frais_pei" string="FRAIS PEI"
+                        domain="[('entity', '=', 'frais_pei')]"/>
+                <filter name="entity_lpe" string="LPE"
+                        domain="[('entity', '=', 'lpe')]"/>
+                <separator/>
+                <!-- Filtres type -->
+                <filter name="type_direct" string="Direct"
+                        domain="[('supplier_type', '=', 'direct')]"/>
+                <filter name="type_indirect" string="Indirect"
+                        domain="[('supplier_type', '=', 'indirect')]"/>
+                <separator/>
+                <!-- Filtres paiement -->
+                <filter name="paid" string="Payées"
+                        domain="[('is_paid', '=', True)]"/>
+                <filter name="unpaid" string="Non payées"
+                        domain="[('is_paid', '=', False)]"/>
+                <separator/>
+                <!-- Filtres période -->
+                <filter name="this_month" string="Ce mois"
+                        domain="[('issue_date', '&gt;=', (context_today() - relativedelta(day=1)).strftime('%%Y-%%m-%%d')),
+                                 ('issue_date', '&lt;=', context_today().strftime('%%Y-%%m-%%d'))]"/>
+                <filter name="last_month" string="Mois dernier"
+                        domain="[('issue_date', '&gt;=', (context_today() - relativedelta(months=1, day=1)).strftime('%%Y-%%m-%%d')),
+                                 ('issue_date', '&lt;', (context_today() - relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter name="this_year" string="Cette année"
+                        domain="[('issue_date', '&gt;=', time.strftime('%%Y-01-01'))]"/>
+                <separator/>
+                <!-- Regroupements -->
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_entity" string="Entité"
+                            context="{'group_by': 'entity'}"/>
+                    <filter name="group_supplier_type" string="Type fournisseur"
+                            context="{'group_by': 'supplier_type'}"/>
+                    <filter name="group_charge" string="Catégorie de charge"
+                            context="{'group_by': 'charge_category'}"/>
+                    <filter name="group_state" string="Statut"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_partner" string="Fournisseur"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_month" string="Mois"
+                            context="{'group_by': 'issue_date:month'}"/>
+                    <filter name="group_batch" string="Lot d'import"
+                            context="{'group_by': 'import_batch_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ════════ ACTION ════════ -->
+    <record id="pennylane_invoice_action" model="ir.actions.act_window">
+        <field name="name">Factures Pennylane</field>
+        <field name="res_model">pennylane.invoice</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="pennylane_invoice_search"/>
+        <field name="context">{'search_default_new': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune facture Pennylane importée
+            </p>
+            <p>
+                Lancez un import depuis le menu Pennylane > Importer des factures.
+            </p>
+        </field>
+    </record>
+
+</odoo>

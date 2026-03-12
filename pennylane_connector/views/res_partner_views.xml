@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_form_pennylane" model="ir.ui.view">
+        <field name="name">res.partner.form.pennylane</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']" position="after">
+                <page string="Pennylane" name="pennylane">
+                    <group>
+                        <group string="Classification">
+                            <field name="pl_entity"/>
+                            <field name="pl_supplier_type"/>
+                            <field name="pl_charge_category"/>
+                        </group>
+                        <group string="Identifiants">
+                            <field name="pl_pennylane_id"/>
+                            <field name="pl_invoice_count"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_list_pennylane" model="ir.ui.view">
+        <field name="name">res.partner.list.pennylane</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="pl_entity" optional="hide"/>
+                <field name="pl_supplier_type" optional="hide"/>
+                <field name="pl_charge_category" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_search_pennylane" model="ir.ui.view">
+        <field name="name">res.partner.search.pennylane</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='supplier']" position="after">
+                <separator/>
+                <filter name="entity_frais_pei" string="FRAIS PEI"
+                        domain="[('pl_entity', '=', 'frais_pei')]"/>
+                <filter name="entity_lpe" string="LPE"
+                        domain="[('pl_entity', '=', 'lpe')]"/>
+                <separator/>
+                <filter name="type_direct" string="Direct"
+                        domain="[('pl_supplier_type', '=', 'direct')]"/>
+                <filter name="type_indirect" string="Indirect"
+                        domain="[('pl_supplier_type', '=', 'indirect')]"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter name="group_entity" string="Entité"
+                        context="{'group_by': 'pl_entity'}"/>
+                <filter name="group_type" string="Type fournisseur"
+                        context="{'group_by': 'pl_supplier_type'}"/>
+                <filter name="group_charge" string="Catégorie de charge"
+                        context="{'group_by': 'pl_charge_category'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
